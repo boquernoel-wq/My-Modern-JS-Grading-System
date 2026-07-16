@@ -61,7 +61,7 @@ function calculateGradePayload() {
         letterGrade = "B";
     } else if (finalWeightedScore <= 99) {
         letterGrade = "A";
-    } else if (finalWeightedScore === 100) {
+    } else {
         letterGrade = "Perfect A+";
     }
 
