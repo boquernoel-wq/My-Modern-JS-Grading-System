@@ -70,5 +70,4 @@ function calculateGradePayload() {
                             '<h1 class="display-5 ' + colorClass + ' font-weight-bold">' + letterGrade + '</h1>';
 }
 
-
 computeBtn.addEventListener("click", calculateGradePayload);
