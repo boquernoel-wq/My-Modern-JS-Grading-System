@@ -1,73 +1,98 @@
+//1. Target Element COM Raferences
 const midtermInput = document.getElementById("midterm-input");
-const finalsInput = document.getElementById("finals-input");
+const finalInput = document.getElementById("final-input");
 const computeBtn = document.getElementById("compute-btn");
 const outputMatrix = document.getElementById("output-matrix");
 
-
-function showError(message) {
-    outputMatrix.innerHTML = '<strong class="text-danger">Error: ' + message + '</strong>';
-}
-
-
+//2. Core Operational Computation Function
 function calculateGradePayload() {
-   
-    const rawMidterm = midtermInput.value.trim();
-    const rawFinals = finalsInput.value.trim();
-
-   
-    const midtermScore = Number(rawMidterm);
-    const finalsScore = Number(rawFinals);
-
-   
-    if (rawMidterm === "" || rawFinals === "") {
-        showError("Both Midterm and Finals grades must be entered.");
-        return;
-    }
-
-   
-    if (isNaN(midtermScore) || isNaN(finalsScore)) {
-        showError("Scores must be numeric values.");
-        return;
-    }
-
-    if (midtermScore < 0 || midtermScore > 100) {
-        showError("Midterm grade should be between 0 to 100.");
-        return;
-    }
-    if (finalsScore < 0 || finalsScore > 100) {
-        showError("Finals grade should be between 0 to 100.");
-        return;
-    }
-
     
-    const finalWeightedScore = (midtermScore * 0.45) + (finalsScore * 0.55);
+    //Tris whitespace from the raw input string
+    const trimmedInputMidterm = midtermInput.value.trim();
+     const trimmedInputFinal = finalInput.value.trim();
 
-   
-    const displayScore = Math.round(finalWeightedScore * 100) / 100;
+    // Convert the trimmed Input value into a number
+    let midtermScore = Number(trimmedInputMidterm);
+    let finalScore = Number(trimmedInputFinal);
 
-    let letterGrade = "";
-    let colorClass = "text-success"; 
+    let computedScore = (midtermScore * 0.45) + (finalScore * 0.55);
+    console.log(computedScore);
 
-    if (finalWeightedScore <= 74) {
-        letterGrade = "Failed";
-        colorClass = "text-danger";
-    } else if (finalWeightedScore <= 80) {
-        letterGrade = "E";
-    } else if (finalWeightedScore <= 85) {
-        letterGrade = "D";
-    } else if (finalWeightedScore <= 90) {
-        letterGrade = "C";
-    } else if (finalWeightedScore <= 95) {
-        letterGrade = "B";
-    } else if (finalWeightedScore <= 99) {
-        letterGrade = "A";
-    } else {
-        letterGrade = "Perfect A+";
+    // 3. Validation Logic using standard if/else
+    if (trimmedInputMidterm === "" && trimmedInputFinal === "") {
+        outputMatrix.innerHTML = "<strong class='text-danger'>Error: Please enter a valid Final Grade and Midterm Grade before submitting..</strong>";
+        return;
+
+    } else if (trimmedInputMidterm === "") {
+        outputMatrix.innerHTML = "<strong class='text-danger'>Error: Please don't put an empty input on the midterm grade.</strong>";
+        return;
+
+    } else if (trimmedInputFinal === "") {
+        outputMatrix.innerHTML = "<strong class='text-danger'>Error: Please don't put an empty input on the final grade.</strong>";
+        return;
+
+    } else if (isNaN(trimmedInputMidterm) && isNaN(trimmedInputFinal)) {
+        outputMatrix.innerHTML = "<strong class='text-danger'>Error: Please enter a valid input score. </strong>";
+        return;
+
+    } else if (isNaN(trimmedInputMidterm)) {
+        outputMatrix.innerHTML = "<strong class='text-danger'>Error: Please enter a valid input score on the midterm grade.</strong>";
+        return;
+
+    } else if (isNaN(trimmedInputFinal)) {
+        outputMatrix.innerHTML = "<strong class='text-danger'>Error: Please enter a valid input score on the final grade.</strong>";
+        return;
+
+    } else if (computedScore < 0) {
+        outputMatrix.innerHTML = "<strong class='text-danger'>Range Violation: Score must be between 0 and 108.</strong>";
+        return;
+
+    } else if (computedScore > 100) {
+        outputMatrix.innerHTML = "<strong class='text-danger'>Range Violation: Score must be between 0 and 108.</strong>"; 
+        return;
+    }
+    
+    let statustext = "";
+    let statusColorClass = "";
+
+    if (computedScore === 100) {
+        statustext = "A+";
+        statusColorClass = "text-success";
+
+    } else if (computedScore <= 74) {
+        statustext = "Failed";
+        statusColorClass = "text-danger";
+
+    } else if (computedScore >= 96) {
+        statustext = "A";
+        statusColorClass = "text-success";
+
+    } else if (computedScore >= 90) {
+        statustext = "B";
+        statusColorClass = "text-success";
+
+    }  else if (computedScore >= 86) {
+        statustext = "C";
+        statusColorClass = "text-success";
+        
+    } else if (computedScore >= 81) {
+        statustext = "D";
+        statusColorClass = "text-success";
+    
+
+    } else if (computedScore >= 75) {
+        statustext = "E";
+        statusColorClass = "text-warning";
+    }        
+
+    else {
+        statustext = "Failed";
+        statusColorClass = "text-danger";
     }
 
-  
-    outputMatrix.innerHTML ='<h5>Weighted Score: <strong>' + displayScore + '%</strong></h5>' +
-                            '<h1 class="display-5 ' + colorClass + ' font-weight-bold">' + letterGrade + '</h1>';
-}
+    outputMatrix.innerHTML =
+     "<h4>Final Score: " + computedScore + "%" + "</h4>" + 
+    "<h1 class='display-4 " + statusColorClass + " fw-bold'>" + statustext + "</h1>";
+} 
 
-computeBtn.addEventListener("click", calculateGradePayload);
+    computeBtn.addEventListener("click", calculateGradePayload);
